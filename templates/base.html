@@ -26,7 +26,9 @@
                         <tr>
                             <th>#</th>
                             <th>Nome</th>
-                            <th>Ações</th>
+                            {% block extra_columns_title %}
+                            {% endblock %}
+                            <th>Ações</th>                            
                         </tr>
                     </thead>
                     <tbody>
@@ -35,6 +37,8 @@
                         <tr data-id="{{entity.id}}">
                             <td class="text-muted">{{entity.id}}</td>
                             <td>{{entity.name}}</td>
+                            {% block extra_columns_value %}
+                            {% endblock %}
                             <td>
                                 {% block extra_actions %}
                                 {% endblock %}

@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{% block extra_columns_title %}
+<th>Preço</th>
+{% endblock %}
+
+{% block extra_columns_value %}
+<td>{{entity.price}}</td>
+{% endblock %}
+
 {% block extra_actions %}
 <a href="#" class="btn btn-sm btn-info text-white" data-id="{{entity.id}}">
     Receita
