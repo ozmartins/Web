@@ -13,25 +13,54 @@
 
 <body>
     {% csrf_token %}
-        
+
     {% include "menu.html" %}
 
-    <main class="container my-4">        
+    <main class="container my-4">
         {% include "title.html" with title=data.title %}
         {% include "search.html" with new_button_label=data.new_button_label %}
-        {% include "table.html" with entities=data.entities %}
+        <div class="card">
+            <div class="table-responsive">
+                <table id="entities-table" class="table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nome</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if data.entities %}
+                        {% for entity in data.entities %}
+                        <tr data-id="{{entity.id}}">
+                            <td class="text-muted">{{entity.id}}</td>
+                            <td>{{entity.name}}</td>
+                            <td>
+                                {% block extra_actions %}
+                                {% endblock %}
+                                <button type="button" class="btn btn-sm btn-outline-info btn-entity-edit"
+                                    data-id="{{entity.id}}" data-name="{{entity.name}}">Alterar</button>
+                                <button type="button" class="btn btn-sm btn-outline-danger btn-entity-delete"
+                                    data-id="{{entity.id}}" data-name="{{entity.name}}">Remover</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         {% include "pagination.html" with pagination=data.pagination %}
         {% include "modals/delete.html"%}
         {% include "modals/new.html"%}
         {% include "modals/edit.html"%}
 
-        <div id="alert-container" class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index:1080;"></div>
+        <div id="alert-container" class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index:1080;">
+        </div>
 
-        <div 
-            id="js-data" 
-            data-endpoint-delete="{{ data.endpoint_delete }}"
-            data-endpoint-create="{{ data.endpoint_create }}"
-            data-endpoint-update="{{ data.endpoint_update }}">
+        <div id="js-data" data-endpoint-delete="{{ data.endpoint_delete }}"
+            data-endpoint-create="{{ data.endpoint_create }}" data-endpoint-update="{{ data.endpoint_update }}">
         </div>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
