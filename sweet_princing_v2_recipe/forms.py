@@ -1,5 +1,5 @@
 from django import forms
-from  .models import Product, Supplier, Recipe, Ingredient
+from .models import Product, Supplier, Recipe, Ingredient, Purchase
 
 class ProductForm(forms.ModelForm):
     class Meta: 
@@ -7,6 +7,9 @@ class ProductForm(forms.ModelForm):
         fields = ["name"]
         widgets = {
             "name": forms.TextInput(attrs={"class": "forma-control", "maxlength": 100})
+        }
+        labels = {
+            'name': 'Nome'
         }
 
 class IngredientForm(forms.ModelForm):
@@ -16,6 +19,9 @@ class IngredientForm(forms.ModelForm):
         widgets = {
             "name": forms.TextInput(attrs={"class": "forma-control", "maxlength": 100})
         }
+        labels = {
+            'name': 'Nome'
+        }
 
 class SupplierForm(forms.ModelForm):
     class Meta: 
@@ -23,6 +29,9 @@ class SupplierForm(forms.ModelForm):
         fields = ["name"]
         widgets = {
             "name": forms.TextInput(attrs={"class": "forma-control", "maxlength": 100})
+        }
+        labels = {
+            'name': 'Nome'
         }
 
 class RecipeForm(forms.ModelForm):
@@ -48,4 +57,17 @@ class RecipeForm(forms.ModelForm):
             'product': 'Produto',
             'yields': 'Rendimento (porções)',
             'preparationTimeInMinutes': 'Tempo de preparo (em minutos)'
+        }
+
+class PurchaseForm(forms.ModelForm):
+    class Meta:
+        model = Purchase
+        fields = ['supplier']
+        widgets = {
+            'supplier': forms.Select(attrs={
+                'class': 'form-select'
+            })
+        }
+        labels = {
+            'supplier': 'Fornecedor'
         }
