@@ -13,10 +13,12 @@ class Recipe(models.Model):
         on_delete=models.RESTRICT,
         related_name='recipes'
     )
-
     yields = models.DecimalField(
         max_digits=5,
         decimal_places=2
     )
-
     preparationTimeInMinutes = models.IntegerField()
+
+class Ingredient(models.Model):
+    name = models.CharField(max_length=100)
+    lastCost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)

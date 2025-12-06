@@ -1,9 +1,17 @@
 from django import forms
-from  .models import Product, Supplier, Recipe
+from  .models import Product, Supplier, Recipe, Ingredient
 
 class ProductForm(forms.ModelForm):
     class Meta: 
         model = Product
+        fields = ["name"]
+        widgets = {
+            "name": forms.TextInput(attrs={"class": "forma-control", "maxlength": 100})
+        }
+
+class IngredientForm(forms.ModelForm):
+    class Meta: 
+        model = Ingredient
         fields = ["name"]
         widgets = {
             "name": forms.TextInput(attrs={"class": "forma-control", "maxlength": 100})
@@ -21,7 +29,6 @@ class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
         fields = ['product', 'yields', 'preparationTimeInMinutes']
-
         widgets = {
             'product': forms.Select(attrs={
                 'class': 'form-select'
@@ -37,7 +44,6 @@ class RecipeForm(forms.ModelForm):
                 'min': '0'
             }),
         }
-
         labels = {
             'product': 'Produto',
             'yields': 'Rendimento (porções)',

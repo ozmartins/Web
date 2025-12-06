@@ -13,6 +13,13 @@ urlpatterns = [
     path('product/update/<int:pk>', views.product_update, name="product_update"),
     path('product/delete/<int:pk>', views.product_delete, name="product_delete"),
 
+    path('ingredient/', views.ingredient_recover, name="ingredient_recover"),
+    path('ingredient/search', views.ingredient_search, name="ingredient_search"),
+    path('ingredient/create', views.ingredient_create, name="ingredient_create"),
+    path('ingredient/recover', views.ingredient_recover, name="ingredient_recover"),
+    path('ingredient/update/<int:pk>', views.ingredient_update, name="ingredient_update"),
+    path('ingredient/delete/<int:pk>', views.ingredient_delete, name="ingredient_delete"),
+
     path('supplier/', views.supplier_recover, name="supplier_recover"),
     path('supplier/create', views.supplier_create, name="supplier_create"),
     path('supplier/recover', views.supplier_recover, name="supplier_recover"),

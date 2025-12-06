@@ -5,11 +5,13 @@
 {% block columns_title %}
 <th>#</th>
 <th>Nome</th>
+<th>Último custo</th>
 {% endblock %}
 
 {% block columns_value %}
 <td class="text-muted">{{entity.id}}</td>
 <td>{{entity.name}}</td>
+<td>{{entity.lastCost}}</td>
 {% endblock %}
 
 {% block actions %}
@@ -24,6 +26,9 @@
 </a>
 <a href="#" class="btn btn-sm btn-outline-primary" data-id="{{entity.id}}">
     Ver compras
+</a>
+<a href="#" class="btn btn-sm btn-outline-primary" data-id="{{entity.id}}">
+    Ver receitas
 </a>
 {% endblock %}
 
