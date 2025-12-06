@@ -9,16 +9,16 @@ const initNewEntityModule = () => {
     const newEntityForm = select("#newEntityForm");
     const saveNewEntityButton = select("#btnSaveEntity");
 
-    const productSelect = select("#entity-product");
-    const productError = select("#entity-product-error");
+    const productSelect = select("#new-entity-product");
+    const productError = select("#new-entity-product-error");
 
-    const yieldsInput = select("#entity-yields");
-    const yieldsError = select("#entity-yields-error");
+    const yieldsInput = select("#new-entity-yields");
+    const yieldsError = select("#new-entity-yields-error");
 
-    const prepTimeInput = select("#entity-preptime");
-    const prepTimeError = select("#entity-preptime-error");
+    const prepTimeInput = select("#new-entity-preptime");
+    const prepTimeError = select("#new-entity-preptime-error");
 
-    const generalError = select("#entity-general-error");
+    const generalError = select("#new-entity-general-error");
 
     const clearNewEntityErrors = () => {
         if (productSelect) {
@@ -135,7 +135,7 @@ const initNewEntityModule = () => {
             }
 
             getNewEntityModal().hide();
-            showAlertMessage("Registro salFvo com sucesso");
+            showAlertMessage("Registro salvo com sucesso");
             window.location.reload();
         } catch {
             if (generalError) {
