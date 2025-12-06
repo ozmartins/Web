@@ -11,7 +11,8 @@ class Recipe(models.Model):
     product = models.ForeignKey(
         'Product',
         on_delete=models.RESTRICT,
-        related_name='recipes'
+        related_name='recipes',
+        unique=True
     )
     yields = models.DecimalField(
         max_digits=5,
