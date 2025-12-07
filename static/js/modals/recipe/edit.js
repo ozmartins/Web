@@ -2,26 +2,26 @@ let productId = 0;
 
 const editEntityModalElement = select("#editEntityModal");
 
-const getEditEntityModal = () => bootstrap.Modal.getOrCreateInstance(editEntityModalElement);
+const getEditRecipeModal = () => bootstrap.Modal.getOrCreateInstance(editRecipeModalElement);
 
-const initEditEntityModule = () => {
-    const editEntityForm = select("#editEntityForm");
-    const saveEditedEntityButton = select("#btnSaveEntity");
+const initEditRecipeModule = () => {
+    const editRecipeForm = select("#editRecipeForm");
+    const saveEditedRecipeButton = select("#btnSaveRecipe");
 
     const idInput = select("#edt-id");
 
-    const productSelect = select("#edit-entity-product");
-    const productError = select("#edit-entity-product-error");
+    const productSelect = select("#edit-recipe-product");
+    const productError = select("#edit-recipe-product-error");
 
-    const yieldsInput = select("#edit-entity-yields");
-    const yieldsError = select("#edit-entity-yields-error");
+    const yieldsInput = select("#edit-recipe-yields");
+    const yieldsError = select("#edit-recipe-yields-error");
 
-    const prepTimeInput = select("#edit-entity-preptime");
-    const prepTimeError = select("#edit-entity-preptime-error");
+    const prepTimeInput = select("#edit-recipe-preptime");
+    const prepTimeError = select("#edit-recipe-preptime-error");
 
-    const generalError = select("#edit-entity-general-error");
+    const generalError = select("#edit-recipe-general-error");
 
-    const clearEditEntityErrors = () => {
+    const clearEditRecipeErrors = () => {
         productSelect.classList.remove("is-invalid");
         productError.textContent = "";
 
@@ -30,27 +30,24 @@ const initEditEntityModule = () => {
 
         prepTimeInput.classList.remove("is-invalid");
         prepTimeError.textContent = "";
+    };
 
-        //generalError.classList.add("d-none");
-        //generalError.textContent = "";
-    };    
-
-    onEvent(editEntityModalElement, "show.bs.modal", () => {        
-        clearEditEntityErrors();        
+    onEvent(editRecipeModalElement, "show.bs.modal", () => {
+        clearEditRecipeErrors();
     });
 
-    delegateEvent(document, "click", ".btn-entity-edit", (_evt, button) => {
-        clearEditEntityErrors();
+    delegateEvent(document, "click", ".btn-recipe-edit", (_evt, button) => {
+        clearEditRecipeErrors();
         productId = button.dataset.product ?? "";
         idInput.value = button.dataset.id ?? "";
-        yieldsInput.value = button.dataset.yields.replace(".", "").replace(",", ".") ?? "";
+        yieldsInput.value = button.dataset.yields?.replace(".", "").replace(",", ".") ?? "";
         prepTimeInput.value = button.dataset.preptime ?? "";
-        getEditEntityModal().show();
+        getEditRecipeModal().show();
     });
 
-    onEvent(editEntityForm, "submit", async evt => {
+    onEvent(editRecipeForm, "submit", async evt => {
         evt.preventDefault();
-        clearEditEntityErrors();
+        clearEditRecipeErrors();
 
         const id = (idInput.value ?? "").trim();
         const product = (productSelect.value ?? "").trim();
@@ -61,9 +58,9 @@ const initEditEntityModule = () => {
         if (!product) { productSelect.classList.add("is-invalid"); productError.textContent = "Informe o produto."; return; }
         if (!yields) { yieldsInput.classList.add("is-invalid"); yieldsError.textContent = "Informe o rendimento da receita."; return; }
         if (!prepTime) { prepTimeInput.classList.add("is-invalid"); prepTimeError.textContent = "Informe o tempo de preparo da receita."; return; }
-        
+
         try {
-            const formData = new FormData(editEntityForm);
+            const formData = new FormData(editRecipeForm);
             const updateUrl = "update/" + encodeURIComponent(id);
             const { ok, data } = await httpRequest(updateUrl, { method: "POST", body: formData });
 
@@ -71,7 +68,7 @@ const initEditEntityModule = () => {
                 if (data?.errors?.product) {
                     productSelect.classList.add("is-invalid");
                     productError.textContent = data.errors.product.join(" ");
-                } 
+                }
                 else if (data?.errors?.yields) {
                     yieldsInput.classList.add("is-invalid");
                     yieldsError.textContent = data.errors.yields.join(" ");
@@ -87,16 +84,16 @@ const initEditEntityModule = () => {
                 return;
             }
 
-            getEditEntityModal().hide();
+            getEditRecipeModal().hide();
             showAlertMessage("Registro salvo com sucesso");
             window.location.reload();
         } catch {
             generalError.classList.remove("d-none");
             generalError.textContent = "Erro de rede. Por favor, tente novamente.";
         } finally {
-            saveEditedEntityButton.disabled = false;
+            saveEditedRecipeButton.disabled = false;
         }
     });
 };
 
-document.addEventListener("DOMContentLoaded", initEditEntityModule);
+document.addEventListener("DOMContentLoaded", initEditRecipeModule);

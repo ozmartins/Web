@@ -29,7 +29,7 @@ urlpatterns = [
     path('recipe/', views.recipe_recover, name="recipe_recover"),
     path('recipe/search', views.recipe_search, name="recipe_search"),
     path('recipe/create', views.recipe_create, name="recipe_create"),
-    path('recipe/recover', views.recipe_recover, name="recipe_recover"),
+    path('recipe/recover/<int:pk>', views.recipe_recover, name="recipe_recover"),
     path('recipe/update/<int:pk>', views.recipe_update, name="recipe_update"),
     path('recipe/delete/<int:pk>', views.recipe_delete, name="recipe_delete")
 ]

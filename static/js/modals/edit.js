@@ -38,13 +38,13 @@ const initEditEntityModule = () => {
         saveEditedEntityButton.disabled = true;
         try {
             const formData = new FormData(editEntityForm);
-            const updateUrl = "update/"+encodeURIComponent(id);
+            const updateUrl = "update/" + encodeURIComponent(id);
             const { ok, data } = await httpRequest(updateUrl, { method: "POST", body: formData });
 
             if (!ok || !data?.ok) {
                 if (data?.errors?.name) {
                     editEntityNameInput.classList.add("is-invalid");
-                   editEntityNameError.textContent = data.errors.name.join(" ");
+                    editEntityNameError.textContent = data.errors.name.join(" ");
                 } else {
                     editEntityGeneralError.classList.remove("d-none");
                     editEntityGeneralError.textContent = "Não foi possivel salvar o registro. Tente novamente.";

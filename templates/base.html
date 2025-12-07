@@ -17,6 +17,7 @@
     {% include "menu.html" %}
 
     <main class="container my-4">
+        {% block content %}
         {% include "title.html" with title=data.title %}
         {% include "search.html" with new_button_label=data.new_button_label %}
         <div class="card">
@@ -37,7 +38,7 @@
                             {% endblock %}
                             <td>
                                 {% block actions %}
-                                {% endblock %}                                
+                                {% endblock %}
                             </td>
                         </tr>
                         {% endfor %}
@@ -54,6 +55,7 @@
 
         <div id="alert-container" class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index:1080;">
         </div>
+        {% endblock %}  
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'js/helpers.js' %}"></script>

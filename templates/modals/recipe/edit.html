@@ -1,30 +1,31 @@
-<div class="modal fade" id="editEntityModal" tabindex="-1" aria-labelledby="edtEntityLabel" aria-hidden="true">
+<div class="modal fade" id="editRecipeModal" tabindex="-1" aria-labelledby="edtRecipeLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <form id="editEntityForm" class="modal-content">
+        <form id="editRecipeForm" class="modal-content">
             {% csrf_token %}
             <input type="hidden" name="id" id="edt-id">
             <div class="modal-header">
-                <h5 class="modal-title" id="editEntityLabel">Editar registro</h5>
+                <h5 class="modal-title" id="editRecipeLabel">Editar registro</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label for="entity-product" class="form-label">Produto</label>
-                    <select class="form-select" id="edit-entity-product" name="product" required>
+                    <label for="recipe-product" class="form-label">Produto</label>
+                    <select class="form-select" id="edit-recipe-product" name="product" required>
                     </select>
-                    <div class="invalid-feedback" id="edit-entity-product-error"></div>
+                    <div class="invalid-feedback" id="edit-recipe-product-error"></div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="entity-yields" class="form-label">Rendimento (porções)</label>
-                    <input type="number" class="form-control" id="edit-entity-yields" name="yields" min="0" step="0.01">
-                    <div class="invalid-feedback" id="edit-entity-yields-error"></div>
+                    <label for="recipe-yields" class="form-label">Rendimento (porções)</label>
+                    <input type="number" class="form-control" id="edit-recipe-yields" name="yields" min="0" step="0.01">
+                    <div class="invalid-feedback" id="edit-recipe-yields-error"></div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="entity-preptime" class="form-label">Tempo de Preparo (minutos)</label>
-                    <input type="number" class="form-control" id="edit-entity-preptime" name="preparationTimeInMinutes" min="0" step="1">
-                    <div class="invalid-feedback" id="edit-entity-preptime-error"></div>
+                    <label for="recipe-preptime" class="form-label">Tempo de Preparo (minutos)</label>
+                    <input type="number" class="form-control" id="edit-recipe-preptime" name="preparationTimeInMinutes"
+                        min="0" step="1">
+                    <div class="invalid-feedback" id="edit-recipe-preptime-error"></div>
                 </div>
                 <div class="alert alert-danger d-none" id="edit-error-general"></div>
             </div>

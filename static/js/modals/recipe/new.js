@@ -1,4 +1,4 @@
-let productName = ""
+let productId = 0
 const newRecipeModal = select("#newRecipeModal");
 const getNewRecipeModal = () => bootstrap.Modal.getOrCreateInstance(newRecipeModal);
 
@@ -77,7 +77,7 @@ const initNewRecipeModule = () => {
 
             getNewRecipeModal().hide();
             showAlertMessage("Registro salvo com sucesso");
-            window.location.href = "/recipe/recover?q=" + productName;
+            window.location.href = "/recipe/recover/" + productId
         } catch {
             if (generalError) {
                 generalError.classList.remove("d-none");
@@ -89,18 +89,18 @@ const initNewRecipeModule = () => {
     });
 
     delegateEvent(document, "click", ".btn-recipe-create", async (_evt, button) => {
-        productName = button.dataset.name;
+        productId = button.dataset.id;
 
         const { ok, data } = await httpRequest("/recipe/search?q=" + button.dataset.id, {
             method: "GET"
         });
 
         if (!ok || data.recipes.length === 0) {
-            productIdInput.value = button.dataset.id ?? "";
+            productIdInput.value = productId ?? "";
             getNewRecipeModal().show();
         }
         else {
-            window.location.href = "/recipe/recover?q=" + button.dataset.name;
+            window.location.href = "/recipe/recover/" + productId;
         }
     });
 };
