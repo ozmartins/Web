@@ -29,16 +29,46 @@
 </button>
 {% endblock %}
 
-{% block modals %}
-{% include "modals/delete.html"%}
-{% include "modals/new.html"%}
-{% include "modals/edit.html"%}
-{% include "modals/recipe/new.html"%}
-{% endblock %}
+{% block complement %}
+<div class="modal fade" id="newRecipeModal" tabindex="-1" aria-labelledby="newRecipeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="newRecipeForm" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newRecipeModalLabel">Nova receita</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
 
-{% block modal_scritps %}
-<script src="{% static 'js/modals/delete.js' %}"></script>
-<script src="{% static 'js/modals/new.js' %}"></script>
-<script src="{% static 'js/modals/edit.js' %}"></script>
+            <div class="modal-body">
+                <input type="hidden" class="form-control" id="product-id" name="product">
+
+                <div class="mb-3">
+                    <label for="new-recipe-yields" class="form-label">Rendimento (porções)</label>
+                    <input type="number" class="form-control" id="new-recipe-yields" name="yields" min="0" step="0.01">
+                    <div class="invalid-feedback" id="new-recipe-yields-error"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="new-recipe-preptime" class="form-label">Tempo de Preparo (minutos)</label>
+                    <input type="number" class="form-control" id="new-recipe-preptime" name="preparationTimeInMinutes"
+                        min="0" step="1">
+                    <div class="invalid-feedback" id="new-recipe-preptime-error"></div>
+                </div>
+
+                <div class="alert alert-danger d-none" id="new-recipe-general-error"></div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    Descartar e fechar
+                </button>
+                <button type="submit" class="btn btn-primary" id="newBtnSaveRecipe">
+                    Salvar e informar ingredientes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script src="{% static 'js/modals/recipe/new.js' %}"></script>
 {% endblock %}

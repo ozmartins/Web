@@ -1,6 +1,6 @@
-let productId = 0;
+var productIdForExistingRecipe = 0;
 
-const editEntityModalElement = select("#editEntityModal");
+const editRecipeModalElement = select("#editRecipeModal");
 
 const getEditRecipeModal = () => bootstrap.Modal.getOrCreateInstance(editRecipeModalElement);
 
@@ -38,7 +38,7 @@ const initEditRecipeModule = () => {
 
     delegateEvent(document, "click", ".btn-recipe-edit", (_evt, button) => {
         clearEditRecipeErrors();
-        productId = button.dataset.product ?? "";
+        productIdForExistingRecipe = button.dataset.product ?? "";
         idInput.value = button.dataset.id ?? "";
         yieldsInput.value = button.dataset.yields?.replace(".", "").replace(",", ".") ?? "";
         prepTimeInput.value = button.dataset.preptime ?? "";
