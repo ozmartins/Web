@@ -21,18 +21,13 @@ Seu objetivo é facilitar o controle de custos de ingredientes e automatizar o c
 
 ## 🧱 Estrutura do Projeto (resumo)
 
-Sweet-Pricing/
-│
-├── <app>/ # App principal (models, views, templates, static...)
-│ ├── models.py
-│ ├── forms.py
-│ ├── views.py
-│ ├── static/
-│ ├── templates/
-│ └── ...
-│
-├── manage.py
-└── README.md
+| Pasta | Função |
+|-------|--------|
+| `sweet_pricing/` | Configurações do projeto Django |
+| `app/` | Funcionalidades da aplicação (MVC do Django) |
+| `templates/` | Arquivos HTML com engine Django |
+| `static/` | JS, CSS e assets de front-end |
+| `migrations/` | Controle de versão do banco de dados |
 
 > *A estrutura pode variar conforme evolução do projeto.*
 
