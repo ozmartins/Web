@@ -38,10 +38,8 @@ class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
         fields = ['product', 'yields', 'preparationTimeInMinutes']
-        widgets = {
-            'product': forms.Select(attrs={
-                'class': 'form-select'
-            }),
+        widgets = {            
+            'product': forms.HiddenInput(),
             'yields': forms.NumberInput(attrs={
                 'class': 'form-control',
                 'step': '0.01',
@@ -53,8 +51,7 @@ class RecipeForm(forms.ModelForm):
                 'min': '0'
             }),
         }
-        labels = {
-            'product': 'Produto',
+        labels = {            
             'yields': 'Rendimento (porções)',
             'preparationTimeInMinutes': 'Tempo de preparo (em minutos)'
         }

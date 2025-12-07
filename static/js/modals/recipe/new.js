@@ -1,31 +1,24 @@
-const entitiesTbody = select("#entities-table tbody");
+let productName = ""
+const newRecipeModal = select("#newRecipeModal");
+const getNewRecipeModal = () => bootstrap.Modal.getOrCreateInstance(newRecipeModal);
 
-const newEntityModal = select("#newEntityModal");
-const getNewEntityModal = () => bootstrap.Modal.getOrCreateInstance(newEntityModal);
+const initNewRecipeModule = () => {
+    if (!newRecipeModal) return;
 
-const initNewEntityModule = () => {
-    if (!newEntityModal) return;
+    const newRecipeForm = select("#newRecipeForm");
+    const saveNewRecipeButton = select("#btnSaveRecipe");
 
-    const newEntityForm = select("#newEntityForm");
-    const saveNewEntityButton = select("#btnSaveEntity");
+    const productIdInput = select("#product-id");
 
-    const productSelect = select("#new-entity-product");
-    const productError = select("#new-entity-product-error");
+    const yieldsInput = select("#new-recipe-yields");
+    const yieldsError = select("#new-recipe-yields-error");
 
-    const yieldsInput = select("#new-entity-yields");
-    const yieldsError = select("#new-entity-yields-error");
+    const prepTimeInput = select("#new-recipe-preptime");
+    const prepTimeError = select("#new-recipe-preptime-error");
 
-    const prepTimeInput = select("#new-entity-preptime");
-    const prepTimeError = select("#new-entity-preptime-error");
+    const generalError = select("#new-recipe-general-error");
 
-    const generalError = select("#new-entity-general-error");
-
-    const clearNewEntityErrors = () => {
-        if (productSelect) {
-            productSelect.classList.remove("is-invalid");
-            if (productError) productError.textContent = "";
-        }
-
+    const clearNewRecipeErrors = () => {
         if (yieldsInput) {
             yieldsInput.classList.remove("is-invalid");
             if (yieldsError) yieldsError.textContent = "";
@@ -42,79 +35,27 @@ const initNewEntityModule = () => {
         }
     };
 
-    const loadEntityProducts = async () => {
-        if (!productSelect) return;
-
-        productSelect.innerHTML = "";
-        productSelect.disabled = true;
-
-        try {
-            const { ok, data } = await httpRequest("/product/search", {
-                method: "GET"
-            });
-
-            if (!ok || !Array.isArray(data.products)) {
-                throw new Error("Resposta inválida ao carregar produtos.");
-            }
-
-            const placeholder = document.createElement("option");
-            placeholder.value = "";
-            placeholder.textContent = "Selecione um produto...";
-            productSelect.appendChild(placeholder);
-
-            data.products.forEach(prod => {
-                const opt = document.createElement("option");
-                opt.value = prod.id;
-                opt.textContent = prod.name;
-                productSelect.appendChild(opt);
-            });
-
-        } catch (err) {
-            console.error(err);
-            if (generalError) {
-                generalError.classList.remove("d-none");
-                generalError.textContent = "Não foi possível carregar a lista de produtos.";
-            }
-        } finally {
-            productSelect.disabled = false;
-        }
-    };
-
-    onEvent(newEntityModal, "show.bs.modal", () => {
-        newEntityForm?.reset();
-        clearNewEntityErrors();
-        loadEntityProducts();
-        setTimeout(() => productSelect?.focus(), 120);
+    onEvent(newRecipeModal, "show.bs.modal", () => {
+        newRecipeForm?.reset();
+        clearNewRecipeErrors();
     });
 
-    onEvent(newEntityForm, "submit", async evt => {
+    onEvent(newRecipeForm, "submit", async evt => {
         evt.preventDefault();
-        clearNewEntityErrors();
+        clearNewRecipeErrors();
 
-        const productValue = productSelect?.value?.trim() ?? "";
-        if (!productValue) {
-            if (productSelect) productSelect.classList.add("is-invalid");
-            if (productError) productError.textContent = "Selecione um produto.";
-            return;
-        }
-
-        if (saveNewEntityButton) saveNewEntityButton.disabled = true;
+        if (saveNewRecipeButton) saveNewRecipeButton.disabled = true;
 
         try {
-            const formData = new FormData(newEntityForm);
+            const formData = new FormData(newRecipeForm);
 
-            const { ok, data } = await httpRequest("create", {
+            const { ok, data } = await httpRequest("/recipe/create", {
                 method: "POST",
                 body: formData
             });
 
             if (!ok || !data?.ok) {
                 const errors = data?.errors ?? {};
-
-                if (errors.product && productSelect && productError) {
-                    productSelect.classList.add("is-invalid");
-                    productError.textContent = errors.product.join(" ");
-                }
 
                 if (errors.yields && yieldsInput && yieldsError) {
                     yieldsInput.classList.add("is-invalid");
@@ -126,7 +67,7 @@ const initNewEntityModule = () => {
                     prepTimeError.textContent = errors.preparationTimeInMinutes.join(" ");
                 }
 
-                if (!errors.product && !errors.yields && !errors.preparationTimeInMinutes && generalError) {
+                if (!errors.yields && !errors.preparationTimeInMinutes && generalError) {
                     generalError.classList.remove("d-none");
                     generalError.textContent = "Não foi possível salvar o registro. Tente novamente.";
                 }
@@ -134,18 +75,34 @@ const initNewEntityModule = () => {
                 return;
             }
 
-            getNewEntityModal().hide();
+            getNewRecipeModal().hide();
             showAlertMessage("Registro salvo com sucesso");
-            window.location.reload();
+            window.location.href = "/recipe/recover?q=" + productName;
         } catch {
             if (generalError) {
                 generalError.classList.remove("d-none");
                 generalError.textContent = "Erro de rede. Por favor, tente novamente.";
             }
         } finally {
-            if (saveNewEntityButton) saveNewEntityButton.disabled = false;
+            if (saveNewRecipeButton) saveNewRecipeButton.disabled = false;
+        }
+    });
+
+    delegateEvent(document, "click", ".btn-recipe-create", async (_evt, button) => {
+        productName = button.dataset.name;
+
+        const { ok, data } = await httpRequest("/recipe/search?q=" + button.dataset.id, {
+            method: "GET"
+        });
+
+        if (!ok || data.recipes.length === 0) {
+            productIdInput.value = button.dataset.id ?? "";
+            getNewRecipeModal().show();
+        }
+        else {
+            window.location.href = "/recipe/recover?q=" + button.dataset.name;
         }
     });
 };
 
-document.addEventListener("DOMContentLoaded", initNewEntityModule);
+document.addEventListener("DOMContentLoaded", initNewRecipeModule);

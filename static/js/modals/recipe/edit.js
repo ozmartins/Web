@@ -33,49 +33,10 @@ const initEditEntityModule = () => {
 
         //generalError.classList.add("d-none");
         //generalError.textContent = "";
-    };
-
-    const loadEntityProducts = async () => {
-        if (!productSelect) return;
-
-        productSelect.innerHTML = "";
-        productSelect.disabled = true;
-
-        try {
-            const { ok, data } = await httpRequest("/product/search", {
-                method: "GET"
-            });
-
-            if (!ok || !Array.isArray(data.products)) {
-                throw new Error("Resposta inválida ao carregar produtos.");
-            }
-
-            const placeholder = document.createElement("option");
-            placeholder.value = "";
-            placeholder.textContent = "Selecione um produto...";
-            productSelect.appendChild(placeholder);
-
-            data.products.forEach(prod => {
-                const opt = document.createElement("option");
-                opt.value = prod.id;
-                opt.textContent = prod.name;                
-                productSelect.appendChild(opt);
-            });
-            productSelect.value = productId;
-        } catch (err) {
-            console.error(err);
-            if (generalError) {
-                generalError.classList.remove("d-none");
-                generalError.textContent = "Não foi possível carregar a lista de produtos.";
-            }
-        } finally {
-            productSelect.disabled = false;
-        }
-    };
+    };    
 
     onEvent(editEntityModalElement, "show.bs.modal", () => {        
-        clearEditEntityErrors();
-        loadEntityProducts();
+        clearEditEntityErrors();        
     });
 
     delegateEvent(document, "click", ".btn-entity-edit", (_evt, button) => {

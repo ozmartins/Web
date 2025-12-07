@@ -53,3 +53,16 @@ def recipe_delete(request, pk: int):
     recipe = get_object_or_404(Recipe, pk=pk)
     recipe.delete()
     return JsonResponse({ "OK": True })
+
+
+@require_GET
+def recipe_search(request):
+    query = request.GET.get("q", "")
+    recipes = Recipe.objects.all()
+    if (query):
+        recipes = recipes.filter(product__id=query)
+    recipes_data = list(recipes.values("id"))
+    return JsonResponse({
+        "ok": True,
+        "recipes": recipes_data
+    })
