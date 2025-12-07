@@ -1,6 +1,3 @@
-
-> *A estrutura pode variar conforme evolução do projeto.*
-
 ---
 
 ## 🛠️ Tecnologias utilizadas
