@@ -1,17 +1,12 @@
-var productIdForExistingRecipe = 0;
-
 const editRecipeModalElement = select("#editRecipeModal");
 
 const getEditRecipeModal = () => bootstrap.Modal.getOrCreateInstance(editRecipeModalElement);
 
 const initEditRecipeModule = () => {
     const editRecipeForm = select("#editRecipeForm");
-    const saveEditedRecipeButton = select("#btnSaveRecipe");
 
-    const idInput = select("#edt-id");
-
-    const productSelect = select("#edit-recipe-product");
-    const productError = select("#edit-recipe-product-error");
+    const recipeIdInput = select("#recipe-id");
+    const productIdInput = select("#product-id");
 
     const yieldsInput = select("#edit-recipe-yields");
     const yieldsError = select("#edit-recipe-yields-error");
@@ -22,9 +17,6 @@ const initEditRecipeModule = () => {
     const generalError = select("#edit-recipe-general-error");
 
     const clearEditRecipeErrors = () => {
-        productSelect.classList.remove("is-invalid");
-        productError.textContent = "";
-
         yieldsInput.classList.remove("is-invalid");
         yieldsError.textContent = "";
 
@@ -36,10 +28,10 @@ const initEditRecipeModule = () => {
         clearEditRecipeErrors();
     });
 
-    delegateEvent(document, "click", ".btn-recipe-edit", (_evt, button) => {
+    delegateEvent(document, "click", "#edit-recipe", (_evt, button) => {
         clearEditRecipeErrors();
-        productIdForExistingRecipe = button.dataset.product ?? "";
-        idInput.value = button.dataset.id ?? "";
+        recipeIdInput.value = button.dataset.id ?? "";
+        productIdInput.value = button.dataset.product ?? "";
         yieldsInput.value = button.dataset.yields?.replace(".", "").replace(",", ".") ?? "";
         prepTimeInput.value = button.dataset.preptime ?? "";
         getEditRecipeModal().show();
@@ -49,27 +41,19 @@ const initEditRecipeModule = () => {
         evt.preventDefault();
         clearEditRecipeErrors();
 
-        const id = (idInput.value ?? "").trim();
-        const product = (productSelect.value ?? "").trim();
         const yields = (yieldsInput.value ?? "").trim();
         const prepTime = (prepTimeInput.value ?? "").trim();
 
-        if (!id) { generalError.classList.remove("d-none"); generalError.textContent = "ID inválido ."; return; }
-        if (!product) { productSelect.classList.add("is-invalid"); productError.textContent = "Informe o produto."; return; }
         if (!yields) { yieldsInput.classList.add("is-invalid"); yieldsError.textContent = "Informe o rendimento da receita."; return; }
         if (!prepTime) { prepTimeInput.classList.add("is-invalid"); prepTimeError.textContent = "Informe o tempo de preparo da receita."; return; }
 
         try {
             const formData = new FormData(editRecipeForm);
-            const updateUrl = "update/" + encodeURIComponent(id);
+            const updateUrl = "/recipe/update/" + encodeURIComponent(recipeIdInput.value);
             const { ok, data } = await httpRequest(updateUrl, { method: "POST", body: formData });
 
             if (!ok || !data?.ok) {
-                if (data?.errors?.product) {
-                    productSelect.classList.add("is-invalid");
-                    productError.textContent = data.errors.product.join(" ");
-                }
-                else if (data?.errors?.yields) {
+                if (data?.errors?.yields) {
                     yieldsInput.classList.add("is-invalid");
                     yieldsError.textContent = data.errors.yields.join(" ");
                 }
@@ -90,8 +74,6 @@ const initEditRecipeModule = () => {
         } catch {
             generalError.classList.remove("d-none");
             generalError.textContent = "Erro de rede. Por favor, tente novamente.";
-        } finally {
-            saveEditedRecipeButton.disabled = false;
         }
     });
 };

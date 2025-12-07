@@ -64,24 +64,26 @@
         <div class="d-flex align-items-end gap-3 flex-wrap">
             <div class="mb-3">
                 <label class="form-label">Rendimento (porções)</label>
-                <input type="number" class="form-control" value="{{data.recipe.yields}}" disabled>
+                <input class="form-control" value="{{data.recipe.yields}}" disabled>
                 <div class="invalid-feedback" id="edit-recipe-yields-error"></div>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Tempo de Preparo (minutos)</label>
-                <input type="number" class="form-control" value="{{data.recipe.preparationTimeInMinutes}}" disabled>
+                <input class="form-control" value="{{data.recipe.preparationTimeInMinutes}}" disabled>
                 <div class="invalid-feedback" id="edit-recipe-preptime-error"></div>
             </div>
 
             <div class="mb-3">
-                <button class="btn btn-outline-info" id="editBtnSave">
+                <button class="btn btn-outline-info" id="edit-recipe" data-yields="{{data.recipe.yields}}"
+                    data-preptime="{{data.recipe.preparationTimeInMinutes}}" data-id="{{data.recipe.id}}"
+                    data-product="{{data.recipe.product.id}}">
                     Alterar
                 </button>
             </div>
 
             <div class="mb-3">
-                <button class="btn btn-primary" id="editBtnSave">
+                <button class="btn btn-primary" id="add-ingredients">
                     Adicionar ingrediente
                 </button>
             </div>
@@ -239,11 +241,57 @@
         <div id="alert-container" class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index:1080;">
         </div>
     </main>
+
+    <div class="modal fade" id="editRecipeModal" tabindex="-1" aria-labelledby="editRecipeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="editRecipeForm" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editRecipeModalLabel">Nova receita</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <input type="hidden" class="form-control" id="recipe-id" name="id">
+                    <input type="hidden" class="form-control" id="product-id" name="product">
+
+                    <div class="mb-3">
+                        <label for="edit-recipe-yields" class="form-label">Rendimento (porções)</label>
+                        <input type="number" class="form-control" id="edit-recipe-yields" name="yields" min="0"
+                            step="0.01">
+                        <div class="invalid-feedback" id="edit-recipe-yields-error"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit-recipe-preptime" class="form-label">Tempo de Preparo (minutos)</label>
+                        <input type="number" class="form-control" id="edit-recipe-preptime"
+                            name="preparationTimeInMinutes" min="0" step="1">
+                        <div class="invalid-feedback" id="edit-recipe-preptime-error"></div>
+                    </div>
+
+                    <div class="alert alert-danger d-none" id="edit-recipe-general-error"></div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        Descartar e fechar
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="editBtnSaveRecipe">
+                        Salvar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'js/helpers.js' %}"></script>
     <script src="{% static 'js/modals/delete.js' %}"></script>
     <script src="{% static 'js/modals/edit.js' %}"></script>
     <script src="{% static 'js/modals/new.js' %}"></script>
+    <script src="{% static 'js/modals/recipe/edit.js' %}"></script>
 </body>
 
 </html>

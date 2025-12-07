@@ -24,8 +24,7 @@ def recipe_create(request):
 @require_GET
 def recipe_recover(request, pk:int):
     recipes = Recipe.objects.all().order_by("product__name")
-    recipe = recipes.filter(product__id=pk).first()
-    recipe.yields = str(recipe.yields).replace(",", ".")
+    recipe = recipes.filter(product__id=pk).first()    
     product = Product.objects.all().filter(id=pk).first()
     page = Paginator(recipes, 10).get_page(request.GET.get("page"))    
     return render(request, "recipe/index.html", {
