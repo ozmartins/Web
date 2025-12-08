@@ -86,7 +86,8 @@
             </div>
 
             <div class="mb-3">
-                <button class="btn btn-primary" id="add-ingredients" data-id="{{data.recipe.id}}">
+                <button class="btn btn-primary" id="add-ingredient" data-id="{{data.recipe.id}}"
+                    data-product="{{data.recipe.product.id}}">
                     Adicionar ingrediente
                 </button>
             </div>
@@ -203,7 +204,7 @@
         </div>
 
         <!-- Modal de inclusão de ingrediente -->
-        <div class="modal fade" id="newRecipeItemModal"tabindex="-1" aria-labelledby="newRecipeItemModalLabel"
+        <div class="modal fade" id="newRecipeItemModal" tabindex="-1" aria-labelledby="newRecipeItemModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
                 <form id="newRecipeItemForm" class="modal-content">
@@ -213,6 +214,8 @@
                     </div>
 
                     <div class="modal-body">
+                        <input type="hidden" class="form-control" id="new-recipe-id" name="recipe">
+
                         <div class="mb-3">
                             <label for="new-recipe-item-ingredient" class="form-label">Ingrediente</label>
                             <select name="ingredient" id="new-recipe-item-ingredient" class="form-select" required>

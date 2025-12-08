@@ -7,7 +7,7 @@ from ..forms import RecipeItemForm
 
 @require_POST
 def recipe_item_create(request):
-    form = RecipeItemForm(request.POST)
+    form = RecipeItemForm(request.POST)    
     if not form.is_valid():
         return JsonResponse({
             "ok": False,

@@ -41,7 +41,7 @@ class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
         fields = ['product', 'yields', 'preparationTimeInMinutes']
-        widgets = {            
+        widgets = {                        
             'product': forms.HiddenInput(),
             'yields': forms.NumberInput(attrs={
                 'class': 'form-control',
@@ -63,7 +63,7 @@ class RecipeForm(forms.ModelForm):
 class RecipeItemForm(forms.ModelForm):        
     class Meta:    
         model = RecipeItem
-        fields = ['ingredient', 'quantity', 'unitOfMeasure']
+        fields = ['recipe', 'ingredient', 'quantity', 'unitOfMeasure']
         widgets = {            
             'recipe': forms.HiddenInput(),
             'ingredient': forms.Select(attrs={

@@ -20,7 +20,7 @@ const initDeleteModule = () => {
         if (!id) return;
 
         try {
-            const deleteUrl = "/recipe-item/delete/" + encodeURIComponent(id);
+            const deleteUrl = "delete/" + encodeURIComponent(id);
 
             const { ok } = await httpRequest(deleteUrl, { method: "POST" });
 

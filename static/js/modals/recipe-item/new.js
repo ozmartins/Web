@@ -1,4 +1,5 @@
 var recipeIdForNewRecipeItem = 0
+var productIdForNewRecipeItem = 0
 
 const newRecipeItemModal = select("#newRecipeItemModal");
 
@@ -9,6 +10,8 @@ const initNewRecipeItemModule = () => {
 
     const newRecipeItemForm = select("#newRecipeItemForm");
     const saveNewRecipeButton = select("#newBtnSaveRecipeItem");
+
+    const recipeIdInput = select("#new-recipe-id");
 
     const ingredientInput = select("#new-recipe-item-ingredient");
     const ingredientError = select("#new-recipe-item-ingredient-error");
@@ -32,9 +35,24 @@ const initNewRecipeItemModule = () => {
         unitError.textContent = "";
     };
 
-    onEvent(newRecipeItemModal, "show.bs.modal", () => {
+    onEvent(newRecipeItemModal, "show.bs.modal", async () => {
         newRecipeItemForm?.reset();
         clearNewRecipeErrors();
+
+        const select = document.getElementById('new-recipe-item-ingredient');
+        const { ok, data } = await httpRequest('/ingredient/search', { method: "GET" });
+
+        if (!ok) {
+            getNewRecipeItemModal().hide();
+            showAlertMessage("Não foi possível carregar a lista de ingredientes. Tente novamente.");
+        }
+
+        data.ingredients.forEach(ingredient => {
+            const option = document.createElement('option');
+            option.value = ingredient.id;
+            option.textContent = ingredient.name;
+            select.appendChild(option);
+        });
     });
 
     onEvent(newRecipeItemForm, "submit", async evt => {
@@ -73,9 +91,9 @@ const initNewRecipeItemModule = () => {
                 return;
             }
 
-            getNewRecipeModal().hide();
+            getNewRecipeItemModal().hide();
             showAlertMessage("Registro salvo com sucesso");
-            window.location.href = "/recipe/recover/" + recipeIdForNewRecipeItem
+            window.location.href = "/recipe/recover/" + productIdForNewRecipeItem
         } catch {
             if (generalError) {
                 generalError.classList.remove("d-none");
@@ -86,9 +104,11 @@ const initNewRecipeItemModule = () => {
         }
     });
 
-    delegateEvent(document, "click", ".btn-recipe-create", async (_evt, button) => {
+    delegateEvent(document, "click", "#add-ingredient", async (_evt, button) => {
         recipeIdForNewRecipeItem = button.dataset.id;
-        getNewRecipeModal().show();
+        productIdForNewRecipeItem = button.dataset.product;
+        recipeIdInput.value = recipeIdForNewRecipeItem;
+        getNewRecipeItemModal().show();
     });
 };
 
