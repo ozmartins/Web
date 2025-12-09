@@ -17,6 +17,8 @@ def purchase_create(request):
             "errors": form.errors
         })
     purchase = form.save()
+    purchase.user = request.user
+    purchase.save()
     return JsonResponse({
             "ok": True,
             "id": purchase.pk
@@ -27,7 +29,7 @@ def purchase_create(request):
 @require_GET
 def purchase_recover(request):
     query = request.GET.get("q", "")
-    purchases = Purchase.objects.all().order_by("create_at")
+    purchases = Purchase.objects.for_user(request.user).order_by("create_at")
     if (query):
         purchases = purchases.filter(supplier__name__icontains=query)
     page = Paginator(purchases, 10).get_page(request.GET.get("page"))

@@ -18,6 +18,7 @@ def ingredient_create(request):
         })
     ingredient = form.save()
     ingredient.lastCost = 0
+    ingredient.user = request.user
     ingredient.save()
     return JsonResponse({
             "ok": True,
@@ -30,7 +31,7 @@ def ingredient_create(request):
 @require_GET
 def ingredient_recover(request):
     query = request.GET.get("q", "")
-    ingredients = Ingredient.objects.all().order_by("name")
+    ingredients = Ingredient.objects.for_user(request.user).order_by("name")
     if (query):
         ingredients = ingredients.filter(name__icontains=query)
     page = Paginator(ingredients, 10).get_page(request.GET.get("page"))
@@ -48,7 +49,7 @@ def ingredient_recover(request):
 @require_GET
 def ingredient_search(request):
     query = request.GET.get("q", "")
-    ingredients = Ingredient.objects.all().order_by("name")
+    ingredients = Ingredient.objects.for_user(request.user).order_by("name")
     if (query):
         ingredients = ingredients.filter(name__icontains=query)
     ingredients_data = list(ingredients.values("id", "name"))

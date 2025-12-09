@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
 
+class OwnedQuerySet(models.QuerySet):
+    def for_user(self, user):
+        return self.filter(user=user)
 
 class OwnedModel(models.Model):
     user = models.ForeignKey(
@@ -9,6 +12,8 @@ class OwnedModel(models.Model):
         null=True,
         blank=True,
     )
+
+    objects = OwnedQuerySet.as_manager()
 
     class Meta:
         abstract = True
@@ -33,10 +38,10 @@ class Ingredient(OwnedModel):
 
 
 class Recipe(OwnedModel):    
-    product = models.OneToOneField(
+    product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
-        blank=True        
+        blank=True
     )
     yields = models.DecimalField(
         max_digits=5,

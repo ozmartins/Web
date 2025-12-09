@@ -17,6 +17,7 @@ def product_create(request):
         })
     product = form.save()
     product.price = 0
+    product.user = request.user
     product.save()
     return JsonResponse({
             "ok": True,
@@ -29,7 +30,7 @@ def product_create(request):
 @require_GET
 def product_recover(request):
     query = request.GET.get("q", "")
-    products = Product.objects.all().order_by("name")
+    products = Product.objects.for_user(request.user).order_by("name")
     if (query):
         products = products.filter(name__icontains=query)
     page = Paginator(products, 10).get_page(request.GET.get("page"))
@@ -47,7 +48,7 @@ def product_recover(request):
 @require_GET
 def product_search(request):
     query = request.GET.get("q", "")
-    products = Product.objects.all().order_by("name")
+    products = Product.objects.for_user(request.user).order_by("name")
     if (query):
         products = products.filter(name__icontains=query)
     products_data = list(products.values("id", "name"))

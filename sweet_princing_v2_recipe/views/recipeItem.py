@@ -16,6 +16,8 @@ def recipe_item_create(request):
             "errors": form.errors
         })
     recipeItem = form.save()
+    recipeItem.user = request.user
+    recipeItem.save()
     return JsonResponse({
             "ok": True,
             "id": recipeItem.pk

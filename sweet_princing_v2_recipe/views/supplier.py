@@ -17,6 +17,8 @@ def supplier_create(request):
             "errors": form.errors
         })
     supplier = form.save()
+    supplier.user = request.user
+    supplier.save()
     return JsonResponse({
             "ok": True,
             "id": supplier.pk,
@@ -28,7 +30,7 @@ def supplier_create(request):
 @require_GET
 def supplier_recover(request):
     query = request.GET.get("q", "")
-    suppliers = Supplier.objects.all().order_by("name")
+    suppliers = Supplier.objects.for_user(request.user).order_by("name")
     if (query):
         suppliers = suppliers.filter(name__icontains=query)
     page = Paginator(suppliers, 10).get_page(request.GET.get("page"))

@@ -16,6 +16,8 @@ def purchase_item_create(request):
             "errors": form.errors
         })
     purchaseItem = form.save()
+    purchaseItem.user = request.user
+    purchaseItem.save()
     return JsonResponse({
             "ok": True,
             "id": purchaseItem.pk
