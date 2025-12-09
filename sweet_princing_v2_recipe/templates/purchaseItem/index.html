@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block columns_title %}
+<th>#</th>
+<th>Ingrediente</th>
+<th class="text-end">Quantidade</th>
+<th>Unidade medida</th>
+<th class="text-end">Total</th>
+{% endblock %}
+
+{% block columns_value %}
+<td class="text-muted">{{entity.id}}</td>
+<td>{{entity.ingredient.name}}</td>
+<td>{{entity.quantity}}</td>
+<td>{{ item.get_unitOfMeasure_display }}</td>
+<td>{{entity.total}}</td>
+{% endblock %}
+
+{% block actions %}
+<button type="button" class="btn btn-sm btn-outline-info btn-entity-edit" data-id="{{entity.id}}"
+    data-name="{{entity.name}}">
+    Alterar
+</button>
+<button type="button" class="btn btn-sm btn-outline-danger btn-entity-delete" data-id="{{entity.id}}">
+    Remover
+</button>
+{% endblock %}

@@ -50,6 +50,7 @@ urlpatterns = [
     path('purchase/delete/<int:pk>', views.purchase_delete, name="purchase_delete"),
     
     path('purchase-item/create', views.purchase_item_create, name="purchase_item_create"),
+    path('purchase-item/recover/<int:pk>', views.purchase_item_recover, name="purchase_item_recover"),
     path('purchase-item/update/<int:pk>', views.purchase_item_update, name="purchase_item_update"),
     path('purchase-item/delete/<int:pk>', views.purchase_item_delete, name="purchase_item_delete")
 ]
