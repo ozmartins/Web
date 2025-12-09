@@ -1,97 +1,76 @@
-var ingredientIdForEditing = 0;
+var purchaseIdForEditing = 0;
+var supplierIdForEditing = 0;
 
-const editRecipeItemModalElement = select("#editRecipeItemModal");
+const editPurchaseModalElement = select("#editPurchaseModal");
 
-const getEditRecipeItemModal = () => {    
-    return bootstrap.Modal.getOrCreateInstance(editRecipeItemModalElement);
+const getEditPurchaseModal = () => {
+    return bootstrap.Modal.getOrCreateInstance(editPurchaseModalElement);
 }
 
-const initEditRecipeItemModule = () => {
-    const editRecipeItemForm = select("#editRecipeItemForm");
+const initEditPurchaseModule = () => {
+    const editPurchaseForm = select("#editPurchaseForm");
 
-    const recipeItemIdInput = select("#recipe-item-id");
+    const purchasedInput = select("#purchase-id");
 
-    const ingredientInput = select("#edit-recipe-item-ingredient");
-    const ingredientError = select("#edit-recipe-item-ingredient-error");
+    const supplierInput = select("#edit-purchase-supplier");
+    const supplierError = select("#edit-purchase-supplier-error");
 
-    const quantityInput = select("#edit-recipe-item-quantity");
-    const quantityError = select("#edit-recipe-item-quantity-error");
+    const generalError = select("#edit-purchase-general-error");
 
-    const unitInput = select("#edit-recipe-item-unit");
-    const unitError = select("#edit-recipe-item-unit-error");
-
-    const generalError = select("#edit-recipe-item-general-error");
-
-    const clearEditRecipeItemErrors = () => {
-        ingredientInput.classList.remove("is-invalid");
-        ingredientError.textContent = "";
-
-        quantityInput.classList.remove("is-invalid");
-        quantityError.textContent = "";
-
-        unitInput.classList.remove("is-invalid");
-        unitError.textContent = "";
+    const clearEditPurchaseErrors = () => {
+        supplierInput.classList.remove("is-invalid");
+        supplierError.textContent = "";
     };
 
-    onEvent(editRecipeItemModalElement, "show.bs.modal", async () => {
-        clearEditRecipeItemErrors();
-        const select = document.getElementById('edit-recipe-item-ingredient');
-        const { ok, data } = await httpRequest('/ingredient/search', { method: "GET" });
-        
+    onEvent(editPurchaseModalElement, "show.bs.modal", async () => {
+        clearEditPurchaseErrors();
+        const select = document.getElementById('edit-purchase-supplier');
+        const { ok, data } = await httpRequest('/supplier/search', { method: "GET" });
+
         if (!ok) {
-            getEditRecipeItemModal().hide();
-            showAlertMessage("Não foi possível carregar a lista de ingredientes. Tente novamente.");
+            getEditPurchaseModal().hide();
+            showAlertMessage("Não foi possível carregar a lista de fornecedores. Tente novamente.");
         }
-        
-        data.ingredients.forEach(ingredient => {
+
+        data.suppliers.forEach(supplier => {
             const option = document.createElement('option');
-            option.value = ingredient.id;
-            option.textContent = ingredient.name;
+            option.value = supplier.id;
+            option.textContent = supplier.name;
             select.appendChild(option);
-        });        
+        });
 
-        select.value = ingredientIdForEditing;
+        select.value = supplierIdForEditing;
     });
 
-    delegateEvent(document, "click", ".edit-recipe-item", (_evt, button) => {
-        ingredientIdForEditing = button.dataset.ingredient ?? "";
-        clearEditRecipeItemErrors();
-        recipeItemIdInput.value = button.dataset.id ?? "";
-        ingredientInput.value = ingredientIdForEditing;
-        quantityInput.value = button.dataset.quantity?.replace(".", "").replace(",", ".") ?? "";
-        unitInput.value = button.dataset.unit ?? "";
-        getEditRecipeItemModal().show();
+    delegateEvent(document, "click", ".edit-purchase", (_evt, button) => {
+        supplierIdForEditing = button.dataset.supplier ?? "";
+        purchaseIdForEditing = button.dataset.id ?? "";
+        clearEditPurchaseErrors();
+        getEditPurchaseModal().show();
     });
 
-    onEvent(editRecipeItemForm, "submit", async evt => {
+    onEvent(editPurchaseForm, "submit", async evt => {
         evt.preventDefault();
-        clearEditRecipeItemErrors();
+        clearEditPurchaseErrors();
 
-        const ingredient = (ingredientInput.value ?? "").trim();
-        const quantity = (quantityInput.value ?? "").trim();
-        const unitOfMeasure = (unitInput.value ?? "").trim();
+        const supplier = (supplierInput.value ?? "").trim();
 
-        if (!ingredient) { ingredientInput.classList.add("is-invalid"); ingredientError.textContent = "Informe o ingreediente."; return; }
-        if (!quantity) { quantityInput.classList.add("is-invalid"); quantityError.textContent = "Informe a quantidade do ingrediente."; return; }
-        if (!unitOfMeasure) { unitInput.classList.add("is-invalid"); unitError.textContent = "Informe a unidade de medida da quantidade."; return; }
+        if (!supplier) {
+            ingredientInput.classList.add("is-invalid");
+            supplierError.textContent = "Informe o fornecedor.";
+            return;
+        }
 
         try {
-            const formData = new FormData(editRecipeItemForm);
-            const updateUrl = "/recipe-item/update/" + encodeURIComponent(recipeItemIdInput.value);
+            const formData = new FormData(editPurchaseForm);
+            const updateUrl = "/purchase/update/" + encodeURIComponent(purchaseIdForEditing);
+            window.alert(updateUrl);
             const { ok, data } = await httpRequest(updateUrl, { method: "POST", body: formData });
 
             if (!ok || !data?.ok) {
-                if (data?.errors?.ingredient) {
-                    ingredientInput.classList.add("is-invalid");
-                    ingredientError.textContent = data.errors.ingredient.join(" ");
-                }
-                else if (data?.errors?.quantity) {
-                    quantityInput.classList.add("is-invalid");
-                    quantityError.textContent = data.errors.quantity.join(" ");
-                }
-                else if (data?.errors?.unit) {
-                    unitInput.classList.add("is-invalid");
-                    unitError.textContent = data.errors.unit.join(" ");
+                if (data?.errors?.supplier) {
+                    supplierInput.classList.add("is-invalid");
+                    supplierError.textContent = data.errors.supplier.join(" ");
                 }
                 else {
                     generalError.classList.remove("d-none");
@@ -100,7 +79,7 @@ const initEditRecipeItemModule = () => {
                 return;
             }
 
-            getEditRecipeItemModal().hide();
+            getEditPurchaseModal().hide();
             showAlertMessage("Registro salvo com sucesso");
             window.location.reload();
         } catch {
@@ -110,4 +89,4 @@ const initEditRecipeItemModule = () => {
     });
 };
 
-document.addEventListener("DOMContentLoaded", initEditRecipeItemModule);
+document.addEventListener("DOMContentLoaded", initEditPurchaseModule);
