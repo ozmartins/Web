@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.views.decorators.http import require_POST, require_GET
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from ..models import PurchaseItem, Ingredient
+from ..models import PurchaseItem, Ingredient, Purchase
 from ..forms import PurchaseItemForm
 
 
@@ -19,10 +19,16 @@ def purchase_item_create(request):
     purchaseItem = form.save()
     purchaseItem.user = request.user
     purchaseItem.save()
+    
     ingredient = Ingredient.objects.for_user(request.user).filter(id=purchaseItem.ingredient.id).first()
     ingredient.lastCost = purchaseItem.total / purchaseItem.quantity    
     ingredient.unitOfMeasure = purchaseItem.unitOfMeasure
     ingredient.save()
+
+    purchase = Purchase.objects.for_user(request.user).filter(id=purchaseItem.purchase.id).first()
+    purchase.total = sum(item.total for item in PurchaseItem.objects.for_user(request.user).filter(purchase__id=purchase.id))
+    purchase.save()
+    
     return JsonResponse({
             "ok": True,
             "id": purchaseItem.pk
@@ -56,10 +62,16 @@ def purchase_item_update(request, pk: int):
     if not form.is_valid():
         return JsonResponse({"ok": False, "errors": form.errors}, status=400)
     purchaseItem = form.save()
+    
     ingredient = Ingredient.objects.for_user(request.user).filter(id=purchaseItem.ingredient.id).first()
     ingredient.lastCost = purchaseItem.total / purchaseItem.quantity    
     ingredient.unitOfMeasure = purchaseItem.unitOfMeasure
     ingredient.save()    
+
+    purchase = Purchase.objects.for_user(request.user).filter(id=purchaseItem.purchase.id).first()
+    purchase.total = sum(item.total for item in PurchaseItem.objects.for_user(request.user).filter(purchase__id=purchase.id))
+    purchase.save()
+
     return JsonResponse({"ok": True, "id": purchaseItem.pk})
 
 

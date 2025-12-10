@@ -286,7 +286,8 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link active" aria-current="page"
                             href="{% url 'sweet_pricing_v2_recipe:product_recover' %}">Início</a></li>
-                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Compras</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" 
+                        href="{% url 'sweet_pricing_v2_recipe:purchase_recover' %}">Compras</a></li>
                     <li class="nav-item"><a class="nav-link active" aria-current="page"
                             href="{% url 'sweet_pricing_v2_recipe:pricing_recover' %}">Precificação</a></li>
                     <li class="nav-item dropdown">
@@ -394,8 +395,8 @@
                                     <td>{{item.ingredient.name}}</td>
                                     <td class="text-end">{{item.quantity}}</td>
                                     <td>{{item.get_unitOfMeasure_display}}</td>
-                                    <td class="text-end">{{item.ingredient.lastCost}}</td>
-                                    <td class="text-end">0</td>
+                                    <td class="text-end">{{item.unitCost}}</td>
+                                    <td class="text-end">{{ item.totalCost|floatformat:2 }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -405,7 +406,7 @@
                     <div class="summary-row">
                         <div class="summary-pill">
                             <span class="label">Total ingredientes:</span>
-                            <span class="value" id="ingredients-total">R$ 0,00</span>
+                            <span class="value" id="ingredients-total">{{data.recipe.totalCost|floatformat:2}}</span>
                         </div>
                     </div>
                 </section>
@@ -420,11 +421,12 @@
                             receita.
                         </small>
 
+                        <div>{{data.laborCost}}</div>
+
                         <div class="row g-3 align-items-end">
                             <div class="col-sm-6">
                                 <label for="labor-hour-value" class="form-label">Valor da hora (R$)</label>
-                                <input id="labor-hour-value" type="number" step="0.01" min="0" class="form-control"
-                                    placeholder="ex: 30,00">
+                                <input id="labor-hour-value" type="number" step="0.01" min="0" class="form-control" value="45.00" readonly>
                             </div>
                             <div class="col-sm-6">
                                 <label for="recipe-time" class="form-label">Tempo de preparo (min)</label>
@@ -436,7 +438,7 @@
                         <div class="summary-row mt-3">
                             <div class="summary-pill">
                                 <span class="label">Custo mão de obra:</span>
-                                <span class="value" id="labor-total">R$ 0,00</span>
+                                <span class="value" id="labor-total">{{data.totalLaborCost|floatformat:2}}</span>
                             </div>
                         </div>
 
@@ -451,12 +453,12 @@
                             <div class="col-sm-6">
                                 <label for="profit-margin" class="form-label">Margem desejada (%)</label>
                                 <input id="profit-margin" type="number" step="1" min="0" class="form-control"
-                                    placeholder="ex: 30">
+                                    value="30" readonly>
                             </div>
                             <div class="col-sm-6">
                                 <label for="total-with-margin" class="form-label">Total com margem</label>
                                 <input id="total-with-margin" type="text" class="form-control" readonly
-                                    placeholder="R$ 0,00">
+                                    placeholder="{{ data.costPlusProfitMargin|floatformat:2 }}">
                             </div>
                         </div>
                     </div>
@@ -465,7 +467,7 @@
                     <div class="result-highlight">
                         <div class="result-title">Preço sugerido por porção</div>
                         <div id="suggested-price" class="result-value-main">
-                            R$ 0,00
+                            R$ {{ data.suggestedPrice|floatformat:2 }}
                         </div>
                         <div class="result-sub">
                             Baseado no custo dos ingredientes, mão de obra e margem de lucro desejada.
@@ -474,26 +476,26 @@
                         <div class="result-grid">
                             <div class="result-chip">
                                 <span>Ingredientes</span>
-                                <strong id="chip-ingredients">R$ 0,00</strong>
+                                <strong id="chip-ingredients">{{data.recipe.totalCost|floatformat:2}}</strong>
                             </div>
                             <div class="result-chip">
                                 <span>Mão de obra</span>
-                                <strong id="chip-labor">R$ 0,00</strong>
+                                <strong id="chip-labor">{{data.totalLaborCost|floatformat:2}}</strong>
                             </div>
                             <div class="result-chip">
                                 <span>Margem (R$)</span>
-                                <strong id="chip-margin">R$ 0,00</strong>
+                                <strong id="chip-margin">{{ data.profitMarginForPresentation|floatformat:0 }}%</strong>
                             </div>
                             <div class="result-chip">
                                 <span>Custo total</span>
-                                <strong id="chip-total">R$ 0,00</strong>
+                                <strong id="chip-total">{{data.totalCost|floatformat:2}}</strong>
                             </div>
                         </div>
 
                         <div class="mt-3 d-flex justify-content-end">
                             <span class="badge-outline">
                                 🧮 Rendimento:
-                                <strong id="chip-yields">— porções</strong>
+                                <strong id="chip-yields">{{data.recipe.yields|floatformat:0}}</strong>
                             </span>
                         </div>
                     </div>

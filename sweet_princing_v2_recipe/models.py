@@ -57,6 +57,12 @@ class Recipe(OwnedModel):
         decimal_places=2
     )
     preparationTimeInMinutes = models.IntegerField()
+    totalCost = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
 
     class Meta:
         verbose_name = "Receita"
@@ -95,6 +101,18 @@ class RecipeItem(OwnedModel):
     unitOfMeasure = models.SmallIntegerField(
         choices=UNIT_CHOICES,
         default=10
+    )
+    totalCost = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
+    unitCost = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True
     )
     
 
